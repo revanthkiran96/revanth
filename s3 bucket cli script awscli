@@ -1,0 +1,9 @@
+#!/bin/bash
+I=$@
+while [ $I -lt 50 ]
+do
+date > file$I
+aws s3 cp file$I s3://revanthbittu
+echo "upload file$I"
+I=$(( $I + 3 ))
+done
