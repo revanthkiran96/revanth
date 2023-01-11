@@ -1,0 +1,18 @@
+#!/bin/bash
+read -p "please enter the valid user name:" USER_NAME
+echo $USER_NAME
+if [ -z "$USER_NAME" ]; then
+   echo "its not a valid user $USER_NAME "
+ else
+   echo "the username is $USER_NAME"
+   EX_USER=$(cat /etc/passwd |cut -d ":" -f 1 | grep -w $USER_NAME)
+   if [ "$USER_NAME" = "$EX_USER" ]; then
+      echo "User $USER_NAME exist. Please select a different user name"
+   else
+      echo "lets create user $USER_NAME"
+      echo $PASSWORD
+      password=$(pwgen -s -1 16)
+      useradd -m $USER_NAME
+      echo "$USER_NAME: $PASSWORD" |sudo chpasswd
+    fi
+fi
