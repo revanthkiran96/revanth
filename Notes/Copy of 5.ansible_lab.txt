@@ -1,0 +1,163 @@
+1. Download the Docker image from hub.docker.com
+docker pull sreeharshav/ubuntu16:withssh2.0_V2
+docker pull sreeharshav/ubuntu16:ansible2.75_V2
+2. Create a new network as below:
+docker network create --subnet 172.20.0.0/16 --gateway 172.20.0.254 ansible_nw
+3.Create three machines as below using the above network.
+docker run --rm -dit --name controller --hostname controller --network ansible_nw sreeharshav/ubuntu16:ansible2.75_V2
+docker run --rm -dit --name web1 --hostname web1 -p 8000:80 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name web2 --hostname web2 -p 8001:80 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name web3 --hostname web3 -p 8002:80 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name app1 --hostname app1 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name app2 --hostname app2 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name app3 --hostname app3 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name db1 --hostname db1 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name db2 --hostname db2 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name db3 --hostname db3 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+docker run --rm -dit --name db4 --hostname db4 --network ansible_nw sreeharshav/ubuntu16:withssh2.0_V2
+4. Go in to the machine1
+docker exec -it machine1 /bin/bash
+5.ping machine 2,3,4
+6.Install Anible using below command
+  apt-get install ansible -y
+7. Run ansible --version and you should get response as ansible 2.7.5
+8.Create a file called hosts using following command.
+   nano hosts
+9. Add the following in the hosts file and save it.
+[local]
+localhost
+[servers]
+machine2
+machine3
+machine4
+
+10. Run the following commands:
+
+root@machine1:/# ansible -i hosts localhost -m ping
+The authenticity of host 'localhost (127.0.0.1)' can't be established.
+ECDSA key fingerprint is SHA256:c4csd9e01W96sDmuauZAKuE6kBYURt/5TJhAm8ARy7g.
+Are you sure you want to continue connecting (yes/no)? yes
+localhost | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+
+root@machine1:/# ansible -i hosts machine2 -m ping
+The authenticity of host 'machine2 (172.20.0.2)' can't be established.
+ECDSA key fingerprint is SHA256:c4csd9e01W96sDmuauZAKuE6kBYURt/5TJhAm8ARy7g.
+Are you sure you want to continue connecting (yes/no)? yes
+machine2 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+root@machine1:/# ansible -i hosts machine3 -m ping
+The authenticity of host 'machine3 (172.20.0.3)' can't be established.
+ECDSA key fingerprint is SHA256:c4csd9e01W96sDmuauZAKuE6kBYURt/5TJhAm8ARy7g.
+Are you sure you want to continue connecting (yes/no)? yes
+machine3 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+root@machine1:/# ansible -i hosts machine4 -m ping
+The authenticity of host 'machine4 (172.20.0.4)' can't be established.
+ECDSA key fingerprint is SHA256:c4csd9e01W96sDmuauZAKuE6kBYURt/5TJhAm8ARy7g.
+Are you sure you want to continue connecting (yes/no)? yes
+machine4 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+root@machine1:/# ansible -i hosts servers -m ping
+machine4 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+machine3 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+machine2 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+11. The above confirmation for asking is called host_key_checking. We need to disable that in /etc/ansible/ansible.cfg.
+    Go to the above file and make it as host_key_checking = False . 
+
+12. Once the change is done, got back to host and stop machine 2,3,4 and since we used --rm the containers will be deleted. Create them again as below.
+
+docker run --rm -dit --name machine2 --hostname machine2 --network ansible_nw sreeharshav/ubuntu16:withssh2.0
+docker run --rm -dit --name machine3 --hostname machine3 --network ansible_nw sreeharshav/ubuntu16:withssh2.0
+docker run --rm -dit --name machine4 --hostname machine3 --network ansible_nw sreeharshav/ubuntu16:withssh2.0
+
+13. Go to the machine 1 using the command docker exec -it machine1 /bin/bash
+14. Run the command "ansible -i hosts servers -m ping" and since the key is disabled the response should be as below.
+root@machine1:/# ansible -i hosts servers -m ping
+machine4 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+machine3 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+machine2 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+15. Create a user using the following command:
+ansible -i hosts  servers -m user -a "user=testuser password=$1$DEbGy.Rc$jsamn44wm0aKhmc0TYmgv1"
+
+16. Confirm by running 
+ansible -i hosts  servers -m command -a "cat /etc/passwd"
+
+----------------------------------Completed----------------------------------
+
+-------------------------------Ansible-AdHoc-Commands-----------
+ansible -i hosts all -m ping
+ansible -i hosts all -m ping -f 1
+ansible -i hosts all -m command -a hostname
+ansible -i hosts all -m command -a uptime
+ansible -i hosts all -m command -a free
+ansible -i hosts all -m command -a df -h
+ansible app -s -a "yum install -y docker-engine"
+ansible -i hosts all  -a "cat /etc/passwd"
+ansible -i hosts servers:app  -a free --limit machine2
+ ansible -i hosts all -a uptime --limit servers
+ansible -i hosts prod -a free (clildren as app & servers)
+ansible -i hosts 'servers:!app' -a free
+ansible -i hosts 'servers!:app' -a free
+ansible -i hosts servers[0] -a uptime
+ansible -i hosts servers[0:2] -a uptime
+ansible -i hosts servers[2:] -a uptime
+ansible -i hosts  servers -m user -a "user=testuser password=$1$pGP3ICXv$6PEDQI/N1RgLzVr/l00YY0"
+ansible app -s -m group -a "name=admin state=present"
+ansible app -s -m user -a "name=devops group=admin createhome=yes"
+ansible app -m copy -a "src=/vagrant/test.txt dest=/tmp/test.txt"
+
+----------------------------------Completed----------------------------------
+
+-------------------------------Ansible-Playbook-Commands---------------------
+ansible-playbook playbook.yml --list-hosts
+ansible-playbook playbook.yml --syntax-check
+ansible-playbook playbook.yml --syntax-check --verbose
+
+HOST-PATTERN:
+https://docs.ansible.com/ansible/latest/user_guide/intro_patterns.html
+
+https://www.middlewareinventory.com/blog/ansible-ad-hoc-command-examples-cheat-sheet/
+https://docs.ansible.com/ansible/latest/user_guide/intro_patterns.html
+
+https://docs.ansible.com/ansible/latest/user_guide/intro_adhoc.html
+
+
+
+
+
+
+
+
+
+
