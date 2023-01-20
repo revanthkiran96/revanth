@@ -11,7 +11,8 @@ set -e
 while true; do
    read -p "please enter the valid user name:" USER_NAME
    echo $USER_NAME
-   if [ -z "$USER_NAME" ]; then
+   if [ -z "$USER_NAME" ]; then 
+# -z stands for USER_NAME is not given it will execute but if any USER_NAME is given then it will execute else statement
       echo "its not a valid user $USER_NAME"
    else
       echo "the user name is $USER_NAME"
