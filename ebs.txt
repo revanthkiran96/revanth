@@ -64,3 +64,13 @@ touch {a..k}
 
 reboot ..
 
+to increase the ebs volume
+growpart /dev/xvdf --> to mount
+resizefs /dev/xvdf --> to file system
+to detaach the volume
+umount /directoryname
+then go to aws ebs deach thee
+----------------------------------------------------------------------------------------------------------
+for windows
+after setting ebs in aws 
+open runcommand : diskmgmt.msc
