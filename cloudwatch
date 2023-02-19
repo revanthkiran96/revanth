@@ -1,0 +1,6 @@
+#for ec2 cloudtrail memoryutiliztion and disk utiliztion
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-scripts-intro.html
+
+#setting a cron job for cloud trail for diskutiliztion and memory utilization
+type cronjob -e in linux instance it will open editor then paste the below code in it
+* * * * * ~/aws-scripts-mon/mon-put-instance-data.pl --mem-used-incl-cache-buff --mem-util --mem-used --mem-avail --disk-space-util --disk-path=/
