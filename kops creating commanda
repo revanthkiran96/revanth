@@ -1,0 +1,66 @@
+1  aws configure
+    2  aws s3 ls
+    3  wget https://github.com/kubernetes/kops/releases/download/v1.26.2/kops-li                                                                                        nux-amd64
+    4  mv kops-linux-amd64 kops
+    5  kops
+    6  chmod 700 kops
+    7  kops
+    8  ll
+    9  kops
+   10  mv kops /usr/local/bin/
+   11  kops
+   12  cd /usr/local/bin/
+   13  ll
+   14  curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable                                                                                        .txt)/bin/linux/amd64/kubectl.sha256"
+   15  ll
+   16  chmod kubectl.sha256
+   17  chmod 700 kubectl.sha256
+   18  ssh-keygen
+   19  kops create cluster --name=revanth.store --state=s3://revanth.store --zon                                                                                        es=ap-northeast-1a --node-count=2 --node-size=t2.micro --master-size=t2.small --                                                                                        master-volume-size 20 --node-volume-size 10 --dns-zone=revanth.store --yes
+   20  kops get clister
+   21  kops get cluster
+   22  kops get cluster --state=s3://revanth.store
+   23  kops delete  cluster --state=s3://revanth.store
+   24  kops delete  cluster revanth.store
+   25  kops delete  cluster --name revanth.store
+   26  kops delete  cluster --name revanth.store --state=s3://revanth.store
+   27  kops delete  cluster --name revanth.store --state=s3://revanth.store --ye                                                                                        s
+   28  kops create cluster --name=revanth.store --state=s3://revanth.store --zon                                                                                        es=ap-northeast-1a --node-count=3 --node-size=t2.micro --master-size=t2.small --                                                                                        master-volume-size 20 --node-volume-size 10 --dns-zone=revanth.store --yes
+   29  kopa get ig  --state=s3://revanth.store
+   30  kops get ig  --state=s3://revanth.store
+   31  kops get cluster  --state=s3://revanth.store
+   32  time watch -n 1 kubectl get nodes
+   33  history
+   34  cd /usr/local/bin/
+   35  ls
+   36  watch -n 1 kubectl get nodes
+   37  sudo  watch -n 1 kubectl get nodes
+   38  history
+   39  kubelecho "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+   40  echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+   41  curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable                                                                                        .txt)/bin/linux/amd64/kubectl.sha256"
+   42  echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+   43  kubectl get nodes
+   44  ll
+   45  chmod +x kubectl
+   46  ll
+   47  kubectl version
+   48  history
+   49  kops delete  cluster --name revanth.store --state=s3://revanth.store --ye                                                                                        s
+   50  history
+   51  exit
+   52  history
+   53  kubectl version
+   54  cd /usr/local/bin/
+   55  kubectl version
+   56  ping localhost
+   57  kubectl get pods -A
+   58  history
+   59  kubectl cluster-info
+   60  kubectl
+   61  kubectl cluster-info
+   62  kubectl config view
+   63  kubectl version
+   64  history
+   65  kubectl
+   66  kubectl version
